@@ -11,11 +11,9 @@ io.on('connection', (socket) => {
   console.log(`connected: ${socket.id} \n`);
 
   socket.on('chat-message', (message, room) => {
-    console.log(`Server will broadcast the following message to room ${room}:`, message, "\n");
     socket.to(room).emit('receive-message', message)
     console.log('Updating the database...')
     postNewMessage(message, room).then((message) => {
-      console.log(`updated DB with message: ${message}`)
       console.log("DB updated successfully")
     })
   })
