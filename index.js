@@ -1,19 +1,27 @@
 import { Server } from 'socket.io';
-import { getEventMessages } from './api.js';
+import { postNewMessage } from './api.js';
 
 const io = new Server({
   cors: {
-    origin: ['http://localhost:8081']
+    origin: 'http://localhost:8081',
   }
 });
 
 io.on('connection', (socket) => {
   console.log(`connected: ${socket.id} \n`);
 
-  socket.on('chat-message', message => {
-    console.log('Server will emit the following message:', message, "\n");
+  socket.on('chat-message', (message, room) => {
+    console.log(`Server will broadcast the following message to room ${room}:`, message, "\n");
+    socket.to(room).emit('receive-message', message)
     console.log('Updating the database...')
-    io.emit('receive-message', message)
+    postNewMessage(message, room).then((message) => {
+      console.log(`updated DB with message: ${message}`)
+      console.log("DB updated successfully")
+    })
+  })
+
+  socket.on('join-room', room => {
+    socket.join(room)
   })
 });
 

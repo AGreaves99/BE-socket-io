@@ -20,3 +20,16 @@ export function getEventMessages(event_id) {
       console.log(err);
     });
 }
+
+export function postNewMessage(message) {
+  
+  const formattedMessage = { ...message };
+  delete formattedMessage.created_at
+  delete formattedMessage.message_id
+  return baseApi.post("/messages", formattedMessage).then(({data}) => {
+    return data.PostedMessage
+  })
+  .catch((err) => {
+    console.dir(err);
+  })
+}
