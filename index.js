@@ -3,7 +3,7 @@ import { postNewMessage } from './api.js';
 
 const io = new Server({
   cors: {
-    origin: 'http://localhost:8081',
+    origin: true,
   }
 });
 
